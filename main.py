@@ -35,9 +35,9 @@ def adaptiveth(img,method):
     if method == 1:
         ret, th = cv2.threshold(img, 127, 255, cv2.THRESH_BINARY)
     elif method == 2:
-        th = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY,11,2)
+        th = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY,3,5)
     elif method == 3:
-        th = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY,11,2)
+        th = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY,5,5)
     return th
 
 def otsu(img,method):
@@ -157,34 +157,31 @@ def main():
 
     # #OCR accuracy evaluation
 
-    #Simple Threshold evaluation
-    titles = ['Similarity Table','Original Image','BINARY','BINARY_INV','TRUNC','TOZERO','TOZERO_INV']
-    sim1 = ['Without Otsu',img_gray, sth1, sth2, sth3, sth4, sth5]
-    sim2 = ['With Otsu',img_gray, osth1, osth2, osth3, osth4, osth5]
-
-    for i in range(6):
-        sim1[i+1] = round(evalAcc(sim1[i+1],corr),3)
-
-    for i in range(6):
-        sim2[i+1] = round(evalAcc(sim2[i+1],corr),3)
-
-    simtable = [titles,sim1,sim2]
-    simtable_t = np.array(simtable).T
-
-    print(simtable_t)
+    # #Simple Threshold evaluation
+    # titles = ['Similarity Table','Original Image','BINARY','BINARY_INV','TRUNC','TOZERO','TOZERO_INV']
+    # sim1 = ['Without Otsu',img_gray, sth1, sth2, sth3, sth4, sth5]
+    # sim2 = ['With Otsu',img_gray, osth1, osth2, osth3, osth4, osth5]
+    #
+    # for i in range(6):
+    #     sim1[i+1] = round(evalAcc(sim1[i+1],corr),3)
+    #
+    # for i in range(6):
+    #     sim2[i+1] = round(evalAcc(sim2[i+1],corr),3)
+    #
+    # simtable = [titles,sim1,sim2]
+    # simtable_t = np.array(simtable).T
+    #
+    # print(simtable_t)
 
     #Adaptive Thresholding Evaluation
     titles = ['Similarity Table', 'Original Image', 'Global Thresholding (v = 127)', 'Adaptive Mean Thresholding', 'Adaptive Gaussian Thresholding']
-    sim1 = ['Without blur', img, ath1, ath2, ath3]
-    sim2 = ['With blur', img, bath1, bath2, bath3]
+    sim1 = ['Adaptive Thresholding', img, ath1, ath2, ath3]
 
     for i in range(4):
         sim1[i + 1] = round(evalAcc(sim1[i + 1], corr),3)
 
-    for i in range(4):
-        sim2[i + 1] = round(evalAcc(sim2[i + 1], corr),3)
 
-    simtable = [titles, sim1, sim2]
+    simtable = [titles, sim1]
     simtable_t = np.array(simtable).T
 
     print(simtable_t)
@@ -193,12 +190,11 @@ def main():
 
 
     #Detecting Characters
-    dsth1 = detect_char(sth1)
+    dsth1 = detect_char(osth1)
     dath2 = detect_char(ath2)
     dshad = detect_char(shad)
 
-    titles = ['STH1', 'ATH2',
-                'Shad']
+    titles = ['STH1', 'ATH2', 'Shad']
     images = [dsth1, dath2, dshad]
 
     characters = plt.figure('Detecting Characters')
@@ -223,8 +219,8 @@ def main():
         plt.xticks([]), plt.yticks([])
 
 
-        plt.show()
-        cv2.waitKey(0)
+    plt.show()
+    cv2.waitKey(0)
 
 if __name__ == "__main__":
     main()
