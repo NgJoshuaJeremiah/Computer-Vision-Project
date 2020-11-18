@@ -144,24 +144,11 @@ def main():
         plt.title(titles[i])
         plt.xticks([]),plt.yticks([])
 
-    #Adaptive Thresholding with blur
+    #Dilation
 
-    img_blur = cv2.medianBlur(img_gray, 5)
+    #Blur
 
-    #Method numbers: 1-NoAdaptive, 2-MeanAdaptive, 3-GaussianAdaptive
-    bath1 = adaptiveth(img_blur,1)
-    bath2 = adaptiveth(img_blur,2)
-    bath3 = adaptiveth(img_blur,3)
-
-    titles = ['Original Image', 'Global Thresholding (v = 127)', 'Adaptive Mean Thresholding', 'Adaptive Gaussian Thresholding']
-    images = [img, bath1, bath2, bath3]
-
-    adaptiveThBlur = plt.figure('Adaptive Threshold with Blur')
-    for i in range(4):
-        plt.subplot(2,2,i+1),plt.imshow(images[i],'gray')
-        plt.title(titles[i])
-        plt.xticks([]),plt.yticks([])
-
+    #Normalization
 
     #Best Result
     shad = shadow_remove(img_gray)
