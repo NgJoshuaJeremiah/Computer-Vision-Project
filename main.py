@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-import pandas as pd
 import pytesseract
 from matplotlib import pyplot as plt
 from difflib import SequenceMatcher
