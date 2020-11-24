@@ -1,6 +1,5 @@
 import cv2
 import numpy as np
-import pandas as pd
 import pytesseract
 from matplotlib import pyplot as plt
 from difflib import SequenceMatcher
@@ -23,9 +22,9 @@ def adaptiveth(img,method):
     if method == 1:
         ret, th = cv2.threshold(img, 127, 255, cv2.THRESH_BINARY)
     elif method == 2:
-        th = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY,9,9) #sample01:(9,9) sample02:(47,5)
+        th = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY,47,5) #sample01:(9,9) sample02:(47,5)
     elif method == 3:
-        th = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY,17,8) #sample01:(17,8) sample02:(31,5)
+        th = cv2.adaptiveThreshold(img, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY,31,5) #sample01:(17,8) sample02:(31,5)
     return th
 
 def otsu(img,method):
@@ -49,11 +48,11 @@ def shadow_remove(img):
         plt.subplot(2, 3, 1), plt.imshow(img, 'gray', vmin=0, vmax=255)
         plt.title('Original')
         plt.xticks([]), plt.yticks([])
-        dilated_img = cv2.dilate(plane, np.ones((11,11), np.uint8)) #sample01:(11,3) sample02:(5,39)
+        dilated_img = cv2.dilate(plane, np.ones((5,5), np.uint8)) #sample01:(11,3) sample02:(5,39)
         plt.subplot(2, 3, 2), plt.imshow(dilated_img, 'gray', vmin=0, vmax=255)
         plt.title('Dilated')
         plt.xticks([]), plt.yticks([])
-        bg_img = cv2.medianBlur(dilated_img, 3)
+        bg_img = cv2.medianBlur(dilated_img, 39)
         plt.subplot(2, 3, 3), plt.imshow(bg_img, 'gray', vmin=0, vmax=255)
         plt.title('Blurred')
         plt.xticks([]), plt.yticks([])
@@ -152,12 +151,12 @@ def para_finder_ath2(img,corr):
 
 def main():
     pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files (x86)\\Tesseract-OCR\\tesseract'
-    img = cv2.imread('sample01.png')
+    img = cv2.imread('sample02.png')
     img = cv2.cvtColor(img,cv2.COLOR_BGR2RGB)
     img_gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
     corrStr1 = "Parking: You may park anywhere on the campus where there are no signs prohibiting par-\nking. Keep in mind the carpool hours and park accordingly so you do not get blocked in the\nafternoon\n\nUnder School Age Children:While we love the younger children, it can be disruptive and\ninappropriate to have them on campus during school hours. There may be special times\nthat they may be invited or can accompany a parent volunteer, but otherwise we ask that\nyou adhere to our    policy for the benefit of the students and staff."
     corrStr2 = "Sonnet for Lena\n\nO dear Lena, your beauty is so vast\nIt is hard sometimes to describe it fast.\nI thought the entire world I would impress\nIf only your protrait I could compress.\nAlas! First when I tried to use VQ\nI found that your cheeks belong to only you.\nYour silky hair contains a thousand lines\nHard to match with sums of discrete cosines.\nAnd for your lips, sensual and tactual\nThirteen Crays found not the proper fractal.\nAnd while these setbacks are all quite severe\nI might have fixed them with hacks here and there\nBut when filters took sparkle from your eyes\nI said, 'Damn all this. I'll just digitize.'\n\nThomas Cothurst"
-    corr = corrStr1
+    corr = corrStr2
 
     #Simple Thresholding
 
@@ -318,7 +317,7 @@ def main():
 
     characters = plt.figure('Detecting Characters')
     for i in range(3):
-        plt.subplot(3,1,i+1),plt.imshow(images[i],'gray')
+        plt.subplot(1,3,i+1),plt.imshow(images[i],'gray')
         plt.title(titles[i])
         plt.xticks([]),plt.yticks([])
 
@@ -333,7 +332,7 @@ def main():
 
     characters = plt.figure('Detecting Words')
     for i in range(3):
-        plt.subplot(3, 1, i + 1), plt.imshow(images[i], 'gray')
+        plt.subplot(1, 3, i + 1), plt.imshow(images[i], 'gray')
         plt.title(titles[i])
         plt.xticks([]), plt.yticks([])
 
